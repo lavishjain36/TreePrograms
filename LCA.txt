@@ -1,0 +1,112 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+	int data;
+	Node *left, *right;
+};
+
+//  To create a new BST node having given key
+Node* newNode(int key)
+{
+	Node* node = new Node;
+	node->data = key;
+	node->left = node->right = NULL;
+
+	return node;
+}
+
+//  In-order traversal of the tree
+void inorder(Node* root)
+{
+	if (root == NULL)
+		return;
+
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+//  insert a key into BST
+Node* insert(Node* root, int key)
+{
+	// if the root is null, create a new node and return it
+	if (root == NULL)
+		return newNode(key);
+
+	// insert into left part
+	if (key < root->data)
+		root->left = insert(root->left, key);
+
+	// insert into right part
+	else
+		root->right = insert(root->right, key);
+
+	return root;
+}
+
+//  search a given key in root
+bool search(Node *root, int key)
+{
+	while (root)
+	{
+		if (key < root->data)
+			root = root->left;
+		else if (key > root->data)
+			root = root->right;
+		else
+			return true;
+	}
+	return false;
+}
+
+Node *LCARecursive(Node* root, int x, int y)
+{
+	if (root == NULL)
+		return NULL;
+
+
+	if (root->data > max(x, y))
+		return LCARecursive(root->left, x, y);
+
+
+	else  if (root->data < min(x, y))
+		return LCARecursive(root->right, x, y);
+
+	return root;
+}
+
+void LCA(Node* root, int x, int y)
+{
+	if (root == NULL || !search(root, x) || !search(root, y))
+		return;
+
+	Node* lca = LCARecursive(root, x, y);
+
+	if (lca != NULL)
+		cout << "LCA is " << lca->data << endl;
+	else
+		cout << "LCA do not exist\n";
+}
+
+int main()
+{
+	Node* root = NULL;
+	/* Construct below tree
+		  14
+		 /   \
+		/	  \
+	   9	  25
+	  / \	  / \
+	 /   \   /   \
+	7	 13 20   40
+	*/
+	int keys[] = { 14, 9, 25, 7, 13, 20, 40 };
+
+	for (int key : keys)
+		root = insert(root, key);
+
+	LCA(root, 20, 40);
+
+	return 0;
+}

@@ -1,0 +1,166 @@
+Palindromic Array
+In this article, we are going to find minimum number of operations to convert an input array to a palindromic array. This problem has been featured in interview coding round of Amazon.
+Submitted by Radib Kar, on January 31, 2019
+
+Problem statement:
+
+Given an array A of size N. Find the minimum number of operations needed to convert the given array to 'Palindromic Array'.
+
+The only allowed operation is that you can merge two adjacent elements in the array and replace them with their sum.
+
+Example:
+
+Input array:
+5 3 3 3
+No of minimum operation: 3 (don't worry, you will know the reason soon!!)
+Input array:
+5 3 3 5
+No of minimum operation: 0 (It's palindromic array!!)
+Solution:
+
+What is palindromic array?
+
+An array is known to palindromic if it forms a palindrome with all its elements.
+
+What are the operations allowed to form a palindromic array from any input array?
+
+The only operation allowed is to merge two adjacent elements and replacing them with their sum.
+
+Can we convert any input array to a palindromic array?
+
+Yah, we can convert any input array to a palindromic array since an array with a single element is always a palindromic array. Thus, any input array can ultimately lead to a palindromic array.
+
+Algorithm:
+
+For solving the above problem a recursive algorithm can be constructed based on the following conditions.
+
+Let array [i, j] be the subarray to be checked where I be the staring index & j be the end index
+
+So there can be three cases,
+
+1)  array[i]==array[j]
+2)  array[i]>array[j]
+3)  array[i]<array[j]
+Based on these three conditions we have constructed the recursive function:
+
+findNoOfOperation(input array, starting index, ending index)
+Let,
+i=start index
+j=end index
+
+FUNCTION findNoOfOperation(input array, i, j)
+BASE CASE
+IF(i==j)
+    return 0; //no more operations needed
+    END IF
+IF (i<=j)
+IF(a[i]==a[j])
+No of operations needed for array(i, j) is same as array(i+1, j-1)
+return findNoOfOperation (array,i+1,j-1);//recursive call
+ELSEIF(a[i]>a[j])
+    We need to merge the two element at the end 
+    to convert it into palindrome array
+    array [j-1]=array[j]+array[j-1]; //merge
+	No of operations needed for array(i, j) is one more than array(i, j-1)
+   return findNoOfOperation(array,i,j-1)+1;
+ELSE
+	We need to merge the two element at the start 
+    to convert it into palindrome array
+    array[i+1]=array[i]+array[i+1];
+	No of operations needed for array(i, j) is one more than array(i+1, j)
+returnfindNoOfOperation(array,i+1,j)+1;
+END IF-ELSE
+END IF
+END FUNCTION
+
+Example with explanation:
+
+For input array:
+5 3 3 3
+Array size: 4
+In the main function we call findNoOfOperation(array, 0, 3) to check the whole array
+Start=0
+End=3 //n-1
+Array to be considered
+5	3	3	3
+
+Start referred as i & end referred as j from now
+findNoOfOperation(array, 0, 3)
+i=0
+j=3
+i !=j
+i<j
+array[i]=5 //array[0]=5
+array[j]=3 //array[3]=3
+array[i]>array[j]
+merge at the end
+array[3-1]=array[3-1]+array[3]
+array[2]=6
+now array is: 
+(we are not deleting any element, rather omitting out from our consideration)
+5	3	6
+
+It returns findNoOfOperation(array, 0, 3-1) +1
+Call to findNoOfOperation(array, 0, 2)
+------------------------------------------------------------------------
+		
+findNoOfOperation(array, 0, 2)
+i=0
+j=2
+i !=j
+i<j
+array[i]=5 //array[0]=5
+array[j]=6 //array[2]=6
+array[i]<array[j]
+merge at the start
+array[0+1]=array[0]+array[0+1]
+array[1]=8
+now array is: 
+(we are not deleting any element, rather omitting out from our consideration)
+8	6
+
+It returns findNoOfOperation(array, 0+1, 2) +1
+Call to findNoOfOperation(array, 1, 2)
+------------------------------------------------------------------------
+
+findNoOfOperation(array, 1, 2)
+i=1
+j=2
+i !=j
+i<j
+array[i]=8 //array[1]=8
+array[j]=6 //array[2]=6
+array[i]>array[j]
+merge at the end
+array[2-1]=array[2]+array[2-1]
+array[1]=14
+now array is: 
+(we are not deleting any element, rather omitting out from our consideration)
+14
+
+It returns findNoOfOperation(array, 1, 2-1) +1
+Call to findNoOfOperation(array, 1, 1)
+------------------------------------------------------------------------
+
+findNoOfOperation(array, 1, 1)
+i=1
+j=1
+i==j
+return 0;
+------------------------------------------------------------------------
+
+At findNoOfOperation(array, 1, 2)
+It returns findNoOfOperation(array, 1, 1) +1 =1
+------------------------------------------------------------------------
+
+At findNoOfOperation(array, 0, 2)
+It returns findNoOfOperation(array, 1, 2) +1 =1+1=2
+------------------------------------------------------------------------
+
+At findNoOfOperation(array, 0, 3)
+It returns findNoOfOperation(array, 0, 2) +1 =2+1=3
+------------------------------------------------------------------------
+
+At main function we called findNoOfOperation(array, 0, 3)
+Hence the no of operation we needed is : 3
+And the palindromic array converted to is 14 (single element array)
